@@ -1,0 +1,72 @@
+/* 
+    作者：Buergerd4sh
+    时间：2023-07
+    版本：0.3
+    内容：zfolder配套css
+*/
+
+:root{
+    --Time: 0.2s
+}
+
+div.foldContainer{
+    position: relative;
+}
+
+img.foldButton{
+    position: absolute;
+    opacity: 0;
+    transition: opacity var(--Time), transform var(--Time);
+}
+
+img.foldButton:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+
+.fold > img.foldButton{     /* 折叠状态下按钮常亮显示 */
+    opacity: 1;
+}
+
+/* li系列css */
+li.foldContainer > img.foldButton{
+    left: -45px;
+    top: 1px;
+}
+
+li.foldContainer.fold > p:first-of-type{    /* li折叠状态下变色标注 */
+    background-color: #eee;
+}
+
+li.foldContainer.fold > *:not(p:first-of-type):not(img.foldButton):not(input) {
+    /* height: 0; */
+    display: none;
+}
+
+/* li.foldContainer.unfold > *:not(p:first-of-type):not(img.foldButton) {
+    
+} */
+
+/* div系列css */
+div.foldContainer > img.foldButton{
+    left: -25px;
+    top: 15px;
+}
+
+div.foldContainer.fold > *:not(:first-child):not(img.foldButton){
+    display: none;
+}
+
+div.foldContainer.fold:first-child{     /* h折叠状态下变色标注 */
+    background-color: #eee;
+}
+
+/* div.foldContainer.unfold > *:not(img.foldButton){
+
+} */
+
+
+
+
+
+
