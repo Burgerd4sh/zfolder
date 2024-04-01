@@ -11,11 +11,15 @@
 */
 
 var imgPath = './zfolder-plugin/down.svg';
-
-let writeNode = document.getElementById('write');                        // 要监听的节点
+let writeNode = document.getElementById('write');                        // 要监听的节点，write节点是typora编辑区的根节点
 let config = { attributes: true, childList: false, subtree: false };     // 要监听的节点变化
+/* 
+    attributes： 属性变化 
+    childList：  直接子节点的变化
+    subtree：    间接子节点（节点的节点，节点的节点的节点……）
+*/
 
-// 事件处理注册
+// 初始化事件处理注册，因为在typora的初始化过程中，write节点还没有加载完成，所以需要监听write节点
 let observer = new MutationObserver((mutationsList, observer) => {
     let writeNode = mutationsList[mutationsList.length - 1].target;
     if (writeNode.className == "enable-diagrams") {
@@ -27,23 +31,23 @@ let observer = new MutationObserver((mutationsList, observer) => {
 );
 observer.observe(writeNode, config);
 
+// 初始化函数
 function initFolder(){
-    // 设置监听事件
-    // 配置监听参数
+    // 设置监听事件，配置监听参数
     let targetNode = document.getElementById('write');                      // 要监听的节点
     const config = { attributes: false, childList: true, subtree: true };   // 要监听的节点变化
-    /* 
-        attributes： 属性变化 
-        childList：  直接子节点的变化
-        subtree：    间接子节点（节点的节点，节点的节点的节点……）
-    */
 
     // 事件处理注册
     const observer = new MutationObserver(mutationHandler);
     observer.observe(targetNode, config);
 
-    addLiParser(targetNode);
+    // 因为此时文件页面已经加载完毕，不会在触发监听事件，所有进行第一次手动初始化
+    addLiParser(targetNode);    
     // addHParser(targetNode);
+    let img = targetNode.getElementsByTagName('img');
+    for(let i of img){
+        addImgParser(i.parentNode);
+    }
 }
 
 function mutationHandler(mutationsList) {
@@ -65,6 +69,7 @@ function mutationHandler(mutationsList) {
                 if (mutation.addedNodes != null) {
                     for (let node of mutation.addedNodes) {
                         addLiParser(node);
+                        addImgParser(node);
                         // addHParser(node);
                     }   
                 }
@@ -72,7 +77,7 @@ function mutationHandler(mutationsList) {
             case "attributes":
                 break;
             default:
-                alert("folder.js mutationHandler Error! Type error!");
+                alert("zfolder.js mutationHandler Error! Type error!");
                 break;
         }
     }
@@ -127,12 +132,12 @@ function createLiFolder(li){
     let img = document.createElement("img");
     img.className = 'foldButton';
     img.src = imgPath;
-    img.onclick = fold;
+    img.onclick = ulfold;
     let pList = li.getElementsByTagName('p');   // 如果插入到第一个p前面，删除该li的时候会报错（不知道插入到后续的p前面会不会报错）
     li.insertBefore(img, pList[0].nextSibling);
 }
 
-function fold(){
+function ulfold(){
     let container = this.parentNode;
     if (container.classList.contains("unfold")) {
         this.style.transform = 'rotate(-90deg)';
@@ -145,7 +150,7 @@ function fold(){
         container.classList.add("unfold");
     }
     else {
-        alert("Error!fold.js需要的折叠class缺失！");
+        alert("Error!zfold.js需要的折叠class缺失！");
     }
 }
 
@@ -162,6 +167,40 @@ function deleteLiParser(mutation){
             }                 
             targetNode.classList.remove("foldContainer", "unfold", "fold");
         }
+    }
+}
+
+// 新增img函数
+function addImgParser(node){
+    if(node.nodeName == 'SPAN'){
+        let attributesValue = node.getAttribute('md-inline');
+        if(attributesValue.includes('image') || attributesValue.includes('imgtag')){
+            let parentP = node.parentNode;
+            parentP.classList.add("foldContainer", "unfold");
+
+            // 添加按钮
+            let img = document.createElement('img');
+            img.className = 'foldButton';
+            img.src = imgPath;
+            img.onclick = imgFold;
+
+            parentP.appendChild(img);
+        }
+        
+    }
+}
+
+function imgFold(){
+    let container = this.parentNode;
+    if (container.classList.contains("unfold")) {
+        this.style.transform = 'rotate(-90deg)';
+        container.classList.remove("unfold");
+        container.classList.add("fold");
+    }
+    else if (container.classList.contains("fold")) {
+        this.style.transform = 'rotate(0)';
+        container.classList.remove("fold");
+        container.classList.add("unfold");
     }
 }
 
