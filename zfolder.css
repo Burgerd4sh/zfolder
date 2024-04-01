@@ -43,23 +43,50 @@ li.foldContainer.fold > *:not(p:first-of-type):not(img.foldButton):not(input) {
     display: none;
 }
 
-/* li.foldContainer.unfold > *:not(p:first-of-type):not(img.foldButton) {
-    
-} */
+/* img系列css */
+p.foldContainer > img.foldButton{
+    opacity: 0.1;    /* 不然看不见找不着 */
+    left: -25px;
+    top: 0px;
+}
+
+p.foldContainer.fold{
+    background-color: #eee;
+}
+
+p.foldContainer.fold > span > img{
+    display: none;
+}
+
+p.foldContainer.fold > span > span{
+    display: inline !important;
+    text-align: left;
+}
+
+p.foldContainer.fold > img.foldButton{
+    opacity: 1;
+    cursor: pointer;
+}
+
+
+
+
+
 
 /* div系列css */
-div.foldContainer > img.foldButton{
+/* div.foldContainer > img.foldButton{
     left: -25px;
     top: 15px;
 }
 
 div.foldContainer.fold > *:not(:first-child):not(img.foldButton){
     display: none;
-}
+} */
 
-div.foldContainer.fold:first-child{     /* h折叠状态下变色标注 */
+/* h折叠状态下变色标注 */
+/* div.foldContainer.fold:first-child{     
     background-color: #eee;
-}
+} */
 
 /* div.foldContainer.unfold > *:not(img.foldButton){
 
