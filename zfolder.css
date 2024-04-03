@@ -44,9 +44,9 @@ li.foldContainer.fold > *:not(p:first-of-type):not(img.foldButton):not(input) {
 }
 
 /* img系列css */
-p.foldContainer > img.foldButton{
-    opacity: 0.1;    /* 不然看不见找不着 */
-    left: -25px;
+p.foldContainer > span > span > img.foldButton{
+    opacity: 0.5;    /* 不然看不见找不着 */
+    left: -20px;
     top: 0px;
 }
 
@@ -55,15 +55,16 @@ p.foldContainer.fold{
 }
 
 p.foldContainer.fold > span > img{
-    display: none;
+    display: none !important;
 }
+
 
 p.foldContainer.fold > span > span{
     display: inline !important;
     text-align: left;
 }
 
-p.foldContainer.fold > img.foldButton{
+p.foldContainer.fold > span > span > img.foldButton{
     opacity: 1;
     cursor: pointer;
 }
