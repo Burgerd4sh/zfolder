@@ -44,10 +44,11 @@ function initFolder(){
     // 因为此时文件页面已经加载完毕，不会在触发监听事件，所有进行第一次手动初始化
     addLiParser(targetNode);    
     // addHParser(targetNode);
-    let img = targetNode.getElementsByTagName('img');
+    let img = [...targetNode.getElementsByTagName('img')];                  // 折叠按钮也符合img的判断条件
     for(let i of img){
         addImgParser(i.parentNode);
     }
+    
 }
 
 function mutationHandler(mutationsList) {
@@ -175,8 +176,9 @@ function addImgParser(node){
     if(node.nodeName == 'SPAN'){
         let attributesValue = node.getAttribute('md-inline');
         if(attributesValue.includes('image') || attributesValue.includes('imgtag')){
-            let parentP = node.parentNode;
-            parentP.classList.add("foldContainer", "unfold");
+            let p = node.parentNode;
+            let span = node.getElementsByTagName('span')[0];
+            p.classList.add("foldContainer", "unfold");
 
             // 添加按钮
             let img = document.createElement('img');
@@ -184,14 +186,14 @@ function addImgParser(node){
             img.src = imgPath;
             img.onclick = imgFold;
 
-            parentP.appendChild(img);
+            span.appendChild(img);
         }
         
     }
 }
 
 function imgFold(){
-    let container = this.parentNode;
+    let container = this.parentNode.parentNode.parentNode;
     if (container.classList.contains("unfold")) {
         this.style.transform = 'rotate(-90deg)';
         container.classList.remove("unfold");
